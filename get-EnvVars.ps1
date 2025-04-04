@@ -1,0 +1,1 @@
+Get-ChildItem Env: | select name,value|ForEach-Object { Write-host $_ -Verbose }
