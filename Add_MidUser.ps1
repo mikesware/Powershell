@@ -6,7 +6,7 @@ function Add-MidUser {
         [Parameter(Mandatory=$true)]
         [string]$ComputerName,
         [string]$Username = "miduser",
-        [string]$Password = "miduser",
+        [string]$localpwd = "miduser",
         [System.Management.Automation.PSCredential]
         [System.Management.Automation.Credential()]
         $Credential = [System.Management.Automation.PSCredential]::Empty
@@ -15,10 +15,10 @@ function Add-MidUser {
     try {
         # Create script block to execute remotely
         $ScriptBlock = {
-            param($Username, $Password)
+            param($Username, $localpwd)
             
             # Convert password to secure string
-            $SecurePassword = ConvertTo-SecureString $Password -AsPlainText -Force
+            $SecurePassword = ConvertTo-SecureString $localpwd -AsPlainText -Force
 
             # Check if user exists
             $UserExists = Get-LocalUser -Name $Username -ErrorAction SilentlyContinue
@@ -41,7 +41,7 @@ function Add-MidUser {
         $params = @{
             ComputerName = $ComputerName
             ScriptBlock = $ScriptBlock
-            ArgumentList = @($Username, $Password)
+            ArgumentList = @($Username, $localpwd)
         }
         if ($Credential -ne [System.Management.Automation.PSCredential]::Empty) {
             $params['Credential'] = $Credential
@@ -50,7 +50,7 @@ function Add-MidUser {
         Invoke-Command @params
     }
     catch {
-        Write-Error "Failed to create/update user on $ComputerName: $_"
+        Write-Error "Failed to create/update user on "+ $ComputerName+": ${_}"
     }
 }
 
@@ -60,3 +60,9 @@ function Add-MidUser {
 # $cred = Get-Credential
 # Add-MidUser -ComputerName "RemotePC" -Credential $cred
 Add-MidUser -ComputerName "Mojo" -Credential $cred
+
+
+#Enable-PSRemoting -Force  # Run this on the remote computer
+#Invoke-Command -ComputerName mojo -ScriptBlock { Get-LocalUser |select-object name}
+#or locally
+#Get-LocalUser |select-object name
