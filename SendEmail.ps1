@@ -19,7 +19,7 @@ function Send-CustomEmail {
     [CmdletBinding()]
     param (
         [Parameter()]
-        [string]$ConfigFilePath = "c:\DATA\email-config.json"
+        [string]$ConfigFilePath = "c:\DATA\config\email-config.json"
     )
 
     # Get current timestamp
