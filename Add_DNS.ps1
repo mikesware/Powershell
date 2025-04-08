@@ -3,12 +3,14 @@
 
 # DNS Server settings
 $DnsServer = "192.168.0.16"
-$ZoneName = "local"  # Change this to match your DNS zone name
+$ZoneName = "mikesware.com"  # DNS zone name for mikesware.com domain
 $HostName = "jellyfin"
 $IPAddress = "192.168.0.251"
 
 try {
     # Get DNS Zone information
+    $allzones= Get-DnsServerZone -ComputerName $DnsServer -ErrorAction SilentlyContinue
+    $allzones
     $dnsZone = Get-DnsServerZone -ComputerName $DnsServer -Name $ZoneName -ErrorAction Stop
     Write-Host "Found DNS Zone: $($dnsZone.ZoneName) [Type: $($dnsZone.ZoneType)]"
 
