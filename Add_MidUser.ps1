@@ -47,8 +47,10 @@ function Add-MidUser {
             $params['Credential'] = $Credential
         }
 
-        Invoke-Command @params
-    }
+ #Invoke-Command @params
+ Invoke-Command $ScriptBlock
+ 
+   }
     catch {
         Write-Error "Failed to create/update user on "+ $ComputerName+": ${_}"
     }
